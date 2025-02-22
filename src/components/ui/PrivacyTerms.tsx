@@ -8,9 +8,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CustomText from "./CustomText";
 
 const PrivacyTerms = () => {
-  const { colors } = useTheme();
-  const { bottom } = useSafeAreaInsets();
-
   const openPrivacyPolicy = () => {
     const url =
       "https://www.termsfeed.com/live/b9b83488-3035-4933-af3e-8cc8e964e4b4";
@@ -19,11 +16,23 @@ const PrivacyTerms = () => {
     );
   };
 
+  const { colors: theme } = useTheme();
+  const { bottom } = useSafeAreaInsets();
+
   return (
-    <View style={[styles.footer, { bottom: bottom + 10 }]}>
+    <View
+      style={[
+        styles.footer,
+        {
+          bottom: bottom + 10,
+          borderColor: theme.gray[200],
+          backgroundColor: theme.background,
+        },
+      ]}
+    >
       <CustomText
         variant="h6"
-        style={[styles.versionCodeText, { color: colors.gray[500] }]}
+        style={[styles.versionCodeText, { color: theme.gray[500] }]}
       >
         v{Application.nativeApplicationVersion}
       </CustomText>
@@ -35,7 +44,9 @@ const PrivacyTerms = () => {
         style={styles.footerTextContainer}
         onPress={openPrivacyPolicy}
       >
+        <CustomText style={styles.footerText}>Terms of service</CustomText>
         <CustomText style={styles.footerText}>Privacy Policy</CustomText>
+        <CustomText style={styles.footerText}>Content Policy</CustomText>
       </TouchableOpacity>
     </View>
   );
@@ -46,18 +57,18 @@ export default PrivacyTerms;
 const styles = StyleSheet.create({
   footer: {
     position: "absolute",
-    alignSelf: "center",
-    width: "100%",
+    borderTopWidth: 1,
+    zIndex: 22,
     justifyContent: "center",
     alignItems: "center",
-    alignContent: "center",
+    width: "100%",
   },
   footerTextContainer: {
     flexDirection: "row",
     gap: 10,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 5,
+    marginTop: 0,
     flexWrap: "wrap",
   },
   footerText: {
@@ -67,6 +78,6 @@ const styles = StyleSheet.create({
   },
   versionCodeText: {
     textAlign: "center",
-    marginBottom: 15,
+    marginVertical: 5,
   },
 });

@@ -1,3 +1,4 @@
+import ToastConfig from "@/components/toast/ToastConfig";
 import CustomThemeProvider from "@/theme/CustomThemeProvider";
 import * as Sentry from "@sentry/react-native";
 import * as QuickActions from "expo-quick-actions";
@@ -7,7 +8,9 @@ import * as Updates from "expo-updates";
 import React, { useEffect } from "react";
 import { Platform } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { vexo } from "vexo-analytics";
+import { KeyboardProvider } from "react-native-keyboard-controller";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
 const manifest = Updates.manifest;
 const metadata = "metadata" in manifest ? manifest.metadata : undefined;
@@ -15,7 +18,7 @@ const extra = "extra" in manifest ? manifest.extra : undefined;
 const updateGroup =
   metadata && "updateGroup" in metadata ? metadata.updateGroup : undefined;
 
-vexo(process.env.EXPO_PUBLIC_VEXO_KEY!);
+//vexo(process.env.EXPO_PUBLIC_VEXO_KEY!);
 
 const navigationIntegration = Sentry.reactNavigationIntegration({
   enableTimeToInitialDisplay: true,
@@ -97,11 +100,18 @@ const RootLayout = () => {
       },
     ]);
   }, [ref]);
+  const { top } = useSafeAreaInsets();
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <InitialLayout />
-    </GestureHandlerRootView>
+    <>
+      <KeyboardProvider navigationBarTranslucent>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <InitialLayout />
+        </GestureHandlerRootView>
+      </KeyboardProvider>
+
+      <Toast config={ToastConfig} position="top" topOffset={top + 15} />
+    </>
   );
 };
 

@@ -3,10 +3,12 @@ export const Colors = {
   primary_light: "#ffe141",
   secondary: "#490D83",
   disabled: "#9197a6",
-  border: "#d0d4dc",
   backgroundSecondary: "#f5f6fb",
   white: "#ffffff",
   black: "#141414",
+  error: "#FF3D00",
+  warning: "#FFA500",
+  success: "#0acf45",
   lightGray: {
     500: "#9E9E9E",
     400: "#BDBDBD",

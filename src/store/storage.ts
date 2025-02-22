@@ -1,8 +1,13 @@
 import { MMKV } from "react-native-mmkv";
 
+export const tokenStorage = new MMKV({
+  id: "token-storage",
+  encryptionKey: "some-secret-key",
+});
+
 export const storage = new MMKV({
   id: "my-app-storage",
-  encryptionKey: "my-encryption-key",
+  encryptionKey: "some-secret-key",
 });
 
 export const mmkvStorage = {
@@ -12,7 +17,6 @@ export const mmkvStorage = {
     return value ?? null;
   },
   removeItem: (key: string) => storage.delete(key),
-  clearAll: () => storage.clearAll(),
 };
 
 export const saveSecurely = (

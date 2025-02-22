@@ -1,14 +1,15 @@
 import { Colors } from "@/constants/Colors";
 import { useSettingsStore } from "@/store/settingsStore";
+import { saveSecurely } from "@/store/storage";
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider as NavigationThemeProvider,
 } from "@react-navigation/native";
+import { useQuickActionRouting } from "expo-quick-actions/router";
 import { StatusBar } from "expo-status-bar";
-import { PropsWithChildren, useEffect, useMemo } from "react";
+import { PropsWithChildren, useMemo } from "react";
 import { useColorScheme } from "react-native";
-import { UnistylesRuntime } from "react-native-unistyles";
 
 const customDarkTheme = {
   ...DarkTheme,
@@ -58,20 +59,19 @@ const CustomThemeProvider = ({ children }: PropsWithChildren) => {
 
   const selectedTheme: any = useMemo(() => {
     const useSystemTheme = theme === "system";
-    const appliedTheme = useSystemTheme ? colorScheme : theme;
+    const appliedTheme: any = useSystemTheme ? colorScheme : theme;
 
-    UnistylesRuntime.setAdaptiveThemes(useSystemTheme);
+    saveSecurely([{ key: "theme", value: appliedTheme }]);
+
     return appliedTheme;
   }, [theme, colorScheme]);
-
-  useEffect(() => {
-    if (theme !== "system") UnistylesRuntime.setTheme(selectedTheme);
-  }, [selectedTheme]);
 
   const currentNavigationTheme = useMemo(
     () => (selectedTheme === "dark" ? customDarkTheme : customLightTheme),
     [selectedTheme]
   );
+
+  useQuickActionRouting();
 
   return (
     <NavigationThemeProvider value={currentNavigationTheme}>

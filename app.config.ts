@@ -41,6 +41,14 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       },
       package: packageName,
       softwareKeyboardLayoutMode: "pan",
+      permissions: [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "FOREGROUND_SERVICE",
+        "ACCESS_BACKGROUND_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+      ],
     },
     updates: {
       url: `https://u.expo.dev/${EAS_PROJECT_ID}`,
@@ -109,6 +117,24 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           icon: "",
           color: "",
           sounds: [],
+        },
+      ],
+      [
+        "expo-build-properties",
+        {
+          android: {
+            usesCleartextTraffic: true,
+            hardwareAccelerated: true,
+            enableProguardInReleaseBuilds: true,
+            enableOnBackInvokedCallback: true,
+          },
+        },
+      ],
+      [
+        "expo-location",
+        {
+          locationAlwaysAndWhenInUsePermission:
+            "Allow $(PRODUCT_NAME) to use your location.",
         },
       ],
     ],

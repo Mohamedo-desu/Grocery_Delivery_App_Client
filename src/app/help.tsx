@@ -1,22 +1,23 @@
-import CustomText from "@/components/global/CustomText";
-import { Colors } from "@/constants/Colors";
+import CustomText from "@/components/ui/CustomText";
 import { Fonts } from "@/constants/Fonts";
+import { useTheme } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
 import React, { useState } from "react";
 import {
   Alert,
   ScrollView,
+  StyleSheet,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { StyleSheet } from "react-native-unistyles";
 
 // Define the different report types that users can choose from
 const reportTypes = ["Bug Report", "Feedback", "Other"];
 
 const HelpScreen = () => {
+  const { colors } = useTheme();
   const { top } = useSafeAreaInsets();
 
   // State to hold report type, user details, and the report text
@@ -81,7 +82,10 @@ const HelpScreen = () => {
     <ScrollView
       showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled"
-      style={[styles.screen, {}]}
+      style={[
+        styles.screen,
+        { backgroundColor: colors.background, paddingTop: top + 20 },
+      ]}
       contentContainerStyle={{ flexGrow: 1 }}
     >
       {/* Header */}
@@ -91,7 +95,7 @@ const HelpScreen = () => {
       <CustomText
         variant="h5"
         fontFamily={Fonts.Medium}
-        style={[styles.subTitle]}
+        style={[styles.subTitle, { color: colors.gray[500] }]}
       >
         Please let us know your feedback or any issues you are facing.
       </CustomText>
@@ -101,10 +105,24 @@ const HelpScreen = () => {
         {reportTypes.map((type) => (
           <TouchableOpacity
             key={type}
-            style={styles.reportTypeButton(selectedType, type)}
+            style={[
+              styles.reportTypeButton,
+              {
+                // Highlight the selected report type using the primary color
+                borderColor:
+                  selectedType === type ? colors.primary : colors.border,
+                backgroundColor:
+                  selectedType === type ? colors.primary : "transparent",
+              },
+            ]}
             onPress={() => setSelectedType(type)}
           >
-            <CustomText style={styles.reportTypeButtonText(selectedType, type)}>
+            <CustomText
+              style={{
+                // Change text color based on selection
+                color: selectedType === type ? colors.background : colors.text,
+              }}
+            >
               {type}
             </CustomText>
           </TouchableOpacity>
@@ -113,8 +131,12 @@ const HelpScreen = () => {
 
       {/* User Name Input */}
       <TextInput
-        style={styles.textInputSmall}
+        style={[
+          styles.textInputSmall,
+          { color: colors.text, borderColor: colors.border },
+        ]}
         placeholder="Your Name"
+        placeholderTextColor={colors.gray[500]}
         value={userName}
         onChangeText={setUserName}
         autoCorrect={false}
@@ -122,8 +144,12 @@ const HelpScreen = () => {
 
       {/* User Email Input */}
       <TextInput
-        style={styles.textInputSmall}
+        style={[
+          styles.textInputSmall,
+          { color: colors.text, borderColor: colors.border },
+        ]}
         placeholder="Your Email"
+        placeholderTextColor={colors.gray[500]}
         value={userEmail}
         onChangeText={setUserEmail}
         keyboardType="email-address"
@@ -133,8 +159,12 @@ const HelpScreen = () => {
 
       {/* Report Description Input */}
       <TextInput
-        style={[styles.textInput, {}]}
+        style={[
+          styles.textInput,
+          { color: colors.text, borderColor: colors.border },
+        ]}
         placeholder="Describe your issue or feedback here..."
+        placeholderTextColor={colors.gray[500]}
         value={reportText}
         onChangeText={setReportText}
         multiline
@@ -143,7 +173,7 @@ const HelpScreen = () => {
 
       {/* Submit Button */}
       <TouchableOpacity
-        style={styles.submitButton}
+        style={[styles.submitButton, { backgroundColor: colors.primary }]}
         onPress={handleSubmit}
         activeOpacity={0.8}
       >
@@ -161,36 +191,26 @@ const HelpScreen = () => {
 
 export default HelpScreen;
 
-const styles = StyleSheet.create((theme, rt) => ({
+const styles = StyleSheet.create({
   screen: {
     flex: 1,
     paddingHorizontal: 20,
     paddingVertical: 20,
-    backgroundColor: theme.Colors.background,
-    paddingTop: rt.insets.top + 20,
   },
   subTitle: {
     marginTop: 10,
-    color: theme.Colors.gray[500],
   },
   reportTypeContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
     marginVertical: 20,
   },
-  reportTypeButton: (selectedType, type) => ({
+  reportTypeButton: {
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: selectedType === type ? Colors.primary : Colors.border,
-    backgroundColor: selectedType === type ? Colors.primary : "transparent",
-  }),
-  reportTypeButtonText: (selectedType, type) => ({
-    // Change text color based on selection
-    color:
-      selectedType === type ? theme.Colors.background : theme.Colors.typography,
-  }),
+  },
   // Larger input style for report description
   textInput: {
     height: 150,
@@ -198,8 +218,6 @@ const styles = StyleSheet.create((theme, rt) => ({
     borderRadius: 5,
     padding: 10,
     marginBottom: 20,
-    color: theme.Colors.typography,
-    borderColor: theme.Colors.gray[200],
   },
   // Smaller input style for name and email
   textInputSmall: {
@@ -208,16 +226,13 @@ const styles = StyleSheet.create((theme, rt) => ({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 20,
-    color: theme.Colors.typography,
-    borderColor: theme.Colors.gray[200],
   },
   submitButton: {
     alignItems: "center",
     paddingVertical: 15,
     borderRadius: 5,
-    backgroundColor: Colors.primary,
   },
   submitButtonText: {
     color: "#fff",
   },
-}));
+});
